@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>注册</title>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: url('/S.png') 16 16, auto;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('/R.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23ffffff"><circle cx="12" cy="12" r="6" fill-opacity="0.5"/></svg>') 12 12, auto;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .register-container {
+            background: rgba(255, 255, 255, 0.9);
+            max-width: 400px;
+            width: 90%;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.5s ease-out;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .captcha-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .captcha-group input {
+            width: 60%;
+        }
+
+        #captchaImage {
+            height: 42px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        #captchaImage:hover {
+            transform: scale(1.05);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #764ba2;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .form-group:hover .hint {
+            opacity: 1;
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-size: 12px;
+            margin-top: 5px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .password-strength {
+            height: 4px;
+            background: #eee;
+            margin-top: 8px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .strength-meter.weak { 
+            width: 33.33%; 
+            background: #ff4444; 
+        }
+
+        .strength-meter.medium { 
+            width: 66.66%; 
+            background: #ffa700; 
+        }
+
+        .strength-meter.strong { 
+            width: 100%; 
+            background: #00c851; 
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .invalid-input {
+            border-color: #ff4444 !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="register-container">
+        <h2>创建账号</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label>用户名</label>
+                <input type="text" id="username" name="username" required placeholder="请输入用户名">
+                <p class="hint">用户名长度3-20个字符</p>
+            </div>
+            <div class="form-group">
+                <label>邮箱</label>
+                <input type="email" id="email" name="email" required placeholder="请输入邮箱地址">
+                <p class="hint">请输入有效的邮箱地址</p>
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="password" name="password" required placeholder="请设置密码" oninput="checkPasswordStrength(this.value)">
+                <div class="password-strength">
+                    <div class="strength-meter"></div>
+                </div>
+                <p class="hint">密码必须包含大小写字母、数字和特殊字符，长度至少8位</p>
+            </div>
+            <div class="form-group">
+                <label>确认密码</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="请再次输入密码">
+            </div>
+            <div class="form-group">
+                <label>验证码</label>
+                <div class="captcha-group">
+                    <input type="text" id="captcha" name="captcha" required placeholder="请输入验证码">
+                    <img id="captchaImage" src="/api/captcha" onclick="refreshCaptcha()" title="点击刷新验证码">
+                </div>
+            </div>
+            <button type="submit">立即注册</button>
+            <p class="login-link">已有账号? <a href="/login">立即登录</a></p>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // 初始化粒子效果
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#667eea' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: false },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#667eea',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
+
+        // 刷新验证码
+        function refreshCaptcha() {
+            const img = document.getElementById('captchaImage');
+            img.src = '/api/captcha?' + new Date().getTime();
+        }
+
+        // 密码强度检查
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            
+            // 检查密码长度
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            
+            // 检查字符类型
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            const meter = document.querySelector('.strength-meter');
+            meter.className = 'strength-meter';
+            
+            if (strength >= 6) {
+                meter.classList.add('strong');
+            } else if (strength >= 4) {
+                meter.classList.add('medium');
+            } else if (strength >= 1) {
+                meter.classList.add('weak');
+            }
+        }
+
+        // 表单验证
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            
+            // 验证用户名
+            if (username.length < 3 || username.length > 20) {
+                showError('username', '用户名长度必须在3-20个字符之间');
+                return;
+            }
+            
+            // 验证邮箱
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('email', '请输入有效的邮箱地址');
+                return;
+            }
+            
+            // 验证密码
+            if (password.length < 8) {
+                showError('password', '密码长度至少8位');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('confirmPassword', '两次输入的密码不一致');
+                return;
+            }
+            
+            // 显示加载动画
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading-spinner"></span> 注册中...';
+            
+            const formData = {
+                username: username,
+                email: email,
+                password: password,
+                captcha: document.getElementById('captcha').value
+            };
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    window.location.href = '/security-questions';
+                } else {
+                    showError('captcha', data.error || '注册失败');
+                    refreshCaptcha();
+                }
+            } catch (error) {
+                showError('captcha', '注册失败，请稍后重试');
+                console.error('Error:', error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+
+        // 显示错误信息
+        function showError(inputId, message) {
+            const input = document.getElementById(inputId);
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            
+            // 移除已存在的错误信息
+            const existingError = input.parentNode.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            input.parentNode.appendChild(errorDiv);
+            input.classList.add('invalid-input');
+            
+            // 自动消失
+            setTimeout(() => {
+                errorDiv.remove();
+                input.classList.remove('invalid-input');
+            }, 3000);
+        }
+    </script>
+</body>
+</html> 

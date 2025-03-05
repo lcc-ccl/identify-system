@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>登录</title>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: url('/S.png') 16 16, auto;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('/R.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23ffffff"><circle cx="12" cy="12" r="6" fill-opacity="0.5"/></svg>') 12 12, auto;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.9);
+            max-width: 400px;
+            width: 90%;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            cursor: url('/S.png') 16 16, text;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+
+        .captcha-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .captcha-group input {
+            width: 60%;
+        }
+
+        #captchaImage {
+            height: 42px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-send-code {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-send-code:hover {
+            background: #5a6fd6;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: #764ba2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background: #663d8f;
+        }
+
+        .nav-links {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .nav-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* 添加动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-container {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* 输入框焦点动画 */
+        .form-group {
+            position: relative;
+        }
+        
+        .form-group::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group:focus-within::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        /* 按钮悬停动画 */
+        button[type="submit"] {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button[type="submit"]::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+        
+        button[type="submit"]:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+        
+        /* 登录框出现动画 */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .login-container {
+            animation: slideIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        
+        /* 输入框动画 */
+        input {
+            transform-origin: left;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            transform: scale(1.02);
+        }
+        
+        /* 验证码按钮动画 */
+        .btn-send-code {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-send-code:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* 链接悬停效果 */
+        .nav-links a {
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* 背景动画 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 1s ease-out;
+        }
+        
+        /* 验证码图片动画 */
+        #captchaImage {
+            transition: transform 0.3s ease;
+        }
+        
+        #captchaImage:hover {
+            transform: scale(1.05);
+        }
+
+        /* 粒子效果容器样式 */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 输入框波纹效果 */
+        .input-ripple {
+            position: absolute;
+            background: rgba(102, 126, 234, 0.2);
+            transform: scale(0);
+            animation: inputRipple 1s linear;
+            border-radius: 4px;
+        }
+
+        @keyframes inputRipple {
+            to {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* 按钮波纹效果 */
+        .button-ripple {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: buttonRipple 1s linear;
+            pointer-events: none;
+        }
+
+        @keyframes buttonRipple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* 可点击元素的鼠标样式 */
+        button, a, input[type="submit"], #captchaImage, .btn-send-code {
+            cursor: url('/S.png') 16 16, pointer;
+        }
+
+        /* 输入框的鼠标样式 */
+        input {
+            cursor: url('/S.png') 16 16, text;
+        }
+
+        /* 鼠标点击效果容器 */
+        .click-effect {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* 鼠标点击波纹动画 */
+        @keyframes clickWave {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* 鼠标轨迹效果 */
+        .mouse-trail {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transition: 0.1s;
+        }
+
+        /* 登录方式切换按钮样式 */
+        .login-type-switch {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .switch-btn {
+            padding: 10px 25px;
+            border: 2px solid #667eea;
+            background: transparent;
+            color: #667eea;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .switch-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .switch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        /* 步骤指示器样式 */
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e1e1e1;
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            background: white;
+            padding: 0 15px;
+            text-align: center;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: #e1e1e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 5px;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-number {
+            background: #667eea;
+            color: white;
+        }
+
+        .step-text {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .step.active .step-text {
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        /* 返回按钮样式 */
+        .btn-back {
+            background: transparent;
+            border: 1px solid #667eea;
+            color: #667eea;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-back:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* 表单切换动画 */
+        #passwordForm, #smsForm, #securityForm {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- 添加粒子效果的容器 -->
+    <div id="particles-js"></div>
+
+    <div class="login-container">
+        <h2>用户登录</h2>
+        
+        <!-- 步骤指示器 -->
+        <div class="steps">
+            <div class="step active" id="step1">
+                <div class="step-number">1</div>
+                <div class="step-text">密码验证</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <div class="step-text">短信验证</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <div class="step-text">安全问题</div>
+            </div>
+        </div>
+
+        <!-- 密码验证表单 -->
+        <form id="passwordForm">
+            <div class="form-group">
+                <label>用户名</label>
+                <input type="text" id="username" name="username" placeholder="请输入用户名" required>
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="password" name="password" placeholder="请输入密码" required>
+            </div>
+            <div class="form-group">
+                <label>图形验证码</label>
+                <div class="captcha-group">
+                    <input type="text" id="captcha_pwd" name="captcha" placeholder="请输入验证码" required>
+                    <img id="captchaImage_pwd" src="/api/captcha" onclick="refreshCaptcha('pwd')" title="点击刷新">
+                </div>
+            </div>
+            <button type="submit">下一步</button>
+        </form>
+
+        <!-- 短信验证表单 -->
+        <form id="smsForm" style="display: none;">
+            <div class="form-group">
+                <label>短信验证码</label>
+                <div class="captcha-group">
+                    <input type="text" id="smsCode" name="smsCode" placeholder="请输入短信验证码" required>
+                    <button type="button" class="btn-send-code" onclick="sendSmsCode()">获取验证码</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>图形验证码</label>
+                <div class="captcha-group">
+                    <input type="text" id="captcha_sms" name="captcha" placeholder="请输入验证码" required>
+                    <img id="captchaImage_sms" src="/api/captcha" onclick="refreshCaptcha('sms')" title="点击刷新">
+                </div>
+            </div>
+            <button type="submit">下一步</button>
+            <button type="button" class="btn-back" onclick="goToStep(1)">返回上一步</button>
+        </form>
+
+        <!-- 安全问题验证表单 -->
+        <form id="securityForm" style="display: none;">
+            <div class="form-group">
+                <label>安全问题一</label>
+                <label id="securityQuestion1"></label>
+                <input type="text" id="securityAnswer1" name="securityAnswer1" placeholder="请输入答案" required>
+            </div>
+            <div class="form-group">
+                <label>安全问二</label>
+                <label id="securityQuestion2"></label>
+                <input type="text" id="securityAnswer2" name="securityAnswer2" placeholder="请输入答案" required>
+            </div>
+            <button type="submit">登 录</button>
+            <button type="button" class="btn-back" onclick="goToStep(2)">返回上一步</button>
+        </form>
+
+        <div class="nav-links">
+            <p>还没有账号? <a href="/register">立即注册</a></p>
+            <p style="margin-top: 10px;">忘记密码? <a href="/reset-password">找回密码</a></p>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let verifiedUsername = '';
+
+        // 刷新验证码
+        function refreshCaptcha(type) {
+            document.getElementById(`captchaImage_${type}`).src = '/api/captcha?' + new Date().getTime();
+        }
+
+        // 切换步骤
+        function goToStep(step) {
+            currentStep = step;
+            
+            // 更新步骤指示器
+            document.querySelectorAll('.step').forEach((el, index) => {
+                if (index + 1 <= step) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+
+            // 切换表单显示
+            document.getElementById('passwordForm').style.display = step === 1 ? 'block' : 'none';
+            document.getElementById('smsForm').style.display = step === 2 ? 'block' : 'none';
+            document.getElementById('securityForm').style.display = step === 3 ? 'block' : 'none';
+
+            // 如果进入安全问题步骤，获取安全问题
+            if (step === 3) {
+                getSecurityQuestions();
+            }
+        }
+
+        // 获取安全问题
+        async function getSecurityQuestions() {
+            try {
+                const response = await fetch('/api/get-security-questions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username: verifiedUsername })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    document.getElementById('securityQuestion1').textContent = data.question1;
+                    document.getElementById('securityQuestion2').textContent = data.question2;
+                } else {
+                    alert(data.error || '获取安全问题失败');
+                }
+            } catch (error) {
+                alert('获取安全问题失败，请稍后重试');
+            }
+        }
+
+        // 发送短信验证码
+        async function sendSmsCode() {
+            if (!verifiedUsername) {
+                alert('请先完成密码验证');
+                return;
+            }
+
+            const button = document.querySelector('.btn-send-code');
+            button.disabled = true;
+            let countdown = 60;
+            
+            const timer = setInterval(() => {
+                button.textContent = `${countdown}秒后重试`;
+                countdown--;
+                if (countdown < 0) {
+                    clearInterval(timer);
+                    button.disabled = false;
+                    button.textContent = '获取验证码';
+                }
+            }, 1000);
+
+            try {
+                const response = await fetch('/api/send-sms-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username: verifiedUsername })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    alert('验证码已发送: ' + data.code); // 实际生产环境中���应显示验证码
+                } else {
+                    alert(data.error || '发送失败');
+                    clearInterval(timer);
+                    button.disabled = false;
+                    button.textContent = '获取验证码';
+                }
+            } catch (error) {
+                alert('发送失败，请稍后重试');
+                clearInterval(timer);
+                button.disabled = false;
+                button.textContent = '获取验证码';
+            }
+        }
+
+        // 密码验证表单提交
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+                captcha: document.getElementById('captcha_pwd').value,
+                loginType: 'password_verify'
+            };
+            
+            try {
+                const response = await fetch('/api/verify-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    verifiedUsername = formData.username;
+                    goToStep(2);
+                } else {
+                    alert(data.error || '验证失败');
+                    refreshCaptcha('pwd');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('验证失败，请稍后重试');
+            }
+        });
+
+        // 短信验证表单提交
+        document.getElementById('smsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                username: verifiedUsername,
+                smsCode: document.getElementById('smsCode').value,
+                captcha: document.getElementById('captcha_sms').value,
+                loginType: 'sms_verify'
+            };
+            
+            try {
+                const response = await fetch('/api/verify-sms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    goToStep(3);
+                } else {
+                    alert(data.error || '验证失败');
+                    refreshCaptcha('sms');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('验证失败，请稍后重试');
+            }
+        });
+
+        // 安全问题验证表单提交
+        document.getElementById('securityForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                username: verifiedUsername,
+                answers: {
+                    answer1: document.getElementById('securityAnswer1').value,
+                    answer2: document.getElementById('securityAnswer2').value
+                }
+            };
+            
+            try {
+                const response = await fetch('/api/verify-security-questions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    // 完成所有验证，进行最终登录
+                    const loginResponse = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: verifiedUsername,
+                            loginType: 'complete'
+                        })
+                    });
+                    
+                    const loginData = await loginResponse.json();
+                    if (loginResponse.ok) {
+                        localStorage.setItem('token', loginData.token);
+                        window.location.href = '/welcome';
+                    } else {
+                        alert(loginData.error || '登录失败');
+                    }
+                } else {
+                    alert(data.error || '验证失败');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('验证失败，请稍后重试');
+            }
+        });
+    </script>
+
+    <!-- 添加粒子效果的脚本 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // 粒子效果配置
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 80,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: '#ffffff'
+                },
+                shape: {
+                    type: 'circle'
+                },
+                opacity: {
+                    value: 0.5,
+                    random: false
+                },
+                size: {
+                    value: 3,
+                    random: true
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#ffffff',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'repulse'
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
+                    },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
+
+        // 添加输入框波纹效果
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function(e) {
+                let ripple = document.createElement('div');
+                ripple.classList.add('input-ripple');
+                this.parentNode.appendChild(ripple);
+                
+                let rect = this.getBoundingClientRect();
+                ripple.style.top = rect.top + 'px';
+                ripple.style.left = rect.left + 'px';
+                ripple.style.width = rect.width + 'px';
+                
+                setTimeout(() => ripple.remove(), 1000);
+            });
+        });
+
+        // 添加按钮点击波纹效果
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                let x = e.clientX - this.getBoundingClientRect().left;
+                let y = e.clientY - this.getBoundingClientRect().top;
+                
+                let ripple = document.createElement('div');
+                ripple.classList.add('button-ripple');
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 1000);
+            });
+        });
+    </script>
+</body>
+</html> 

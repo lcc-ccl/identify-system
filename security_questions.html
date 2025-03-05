@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>设置安全问题</title>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: url('/S.png') 16 16, auto;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('/R.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23ffffff"><circle cx="12" cy="12" r="6" fill-opacity="0.5"/></svg>') 12 12, auto;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .security-container {
+            background: rgba(255, 255, 255, 0.9);
+            max-width: 500px;
+            width: 90%;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.5s ease-out;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #eee;
+            margin: 30px 0;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar .progress {
+            height: 100%;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            width: 0;
+            transition: width 0.5s ease;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .question-number {
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
+        }
+
+        label {
+            display: block;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+            transform: translateY(-1px);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-size: 12px;
+            margin-top: 5px;
+            animation: shake 0.5s ease-in-out;
+            display: none;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .form-group:hover .hint {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="security-container">
+        <h2>设置安全问题</h2>
+        <div class="progress-bar">
+            <div class="progress" style="width: 0%"></div>
+        </div>
+        <form id="securityForm">
+            <div class="form-group">
+                <div class="question-number">1</div>
+                <label>安全问题一</label>
+                <select id="question1" name="question1" required>
+                    <option value="">请选择安全问题</option>
+                    <option value="1">您的出生地是？</option>
+                    <option value="2">您的母亲的名字是？</option>
+                    <option value="3">您的第一所学校是？</option>
+                    <option value="4">您最喜欢的��色是？</option>
+                    <option value="5">您的宠物的名字是？</option>
+                </select>
+                <input type="text" id="answer1" name="answer1" placeholder="请输入答案" required style="margin-top: 10px;">
+                <div class="hint">请选择一个安全问题并填写答案</div>
+                <div class="error-message" id="error1"></div>
+            </div>
+
+            <div class="form-group">
+                <div class="question-number">2</div>
+                <label>安全问题二</label>
+                <select id="question2" name="question2" required>
+                    <option value="">请选择安全问题</option>
+                    <option value="1">您的出生地是？</option>
+                    <option value="2">您的母亲的名字是？</option>
+                    <option value="3">您的第一所学校是？</option>
+                    <option value="4">您最喜欢的颜色是？</option>
+                    <option value="5">您的宠物的名字是？</option>
+                </select>
+                <input type="text" id="answer2" name="answer2" placeholder="请输入答案" required style="margin-top: 10px;">
+                <div class="hint">请选择一个不同于问题一的安全问题</div>
+                <div class="error-message" id="error2"></div>
+            </div>
+
+            <button type="submit">确认设置</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // 初始化粒子效果
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#667eea' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: false },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#667eea',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
+
+        // 更新进度条
+        function updateProgress() {
+            const form = document.getElementById('securityForm');
+            const inputs = form.querySelectorAll('select, input[type="text"]');
+            let filledCount = 0;
+
+            inputs.forEach(input => {
+                if (input.value) filledCount++;
+            });
+
+            const progress = (filledCount / inputs.length) * 100;
+            document.querySelector('.progress').style.width = `${progress}%`;
+        }
+
+        // 添加输入监听
+        document.querySelectorAll('select, input').forEach(input => {
+            input.addEventListener('input', updateProgress);
+        });
+
+        // 防止选择相同的问题
+        document.getElementById('question2').addEventListener('change', function() {
+            const question1 = document.getElementById('question1').value;
+            if (this.value === question1 && this.value !== '') {
+                showError('error2', '请选择一个不同的问题');
+                this.value = '';
+                updateProgress();
+            }
+        });
+
+        // 表单提交
+        document.getElementById('securityForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const question1 = document.getElementById('question1').value;
+            const answer1 = document.getElementById('answer1').value;
+            const question2 = document.getElementById('question2').value;
+            const answer2 = document.getElementById('answer2').value;
+            
+            if (question1 === question2) {
+                showError('error2', '两个安全问题不能相同');
+                return;
+            }
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading-spinner"></span> 保存中...';
+            
+            try {
+                const response = await fetch('/api/set-security-questions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        question1: question1,
+                        answer1: answer1,
+                        question2: question2,
+                        answer2: answer2
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    window.location.href = '/login';
+                } else {
+                    showError('error1', data.error || '设置失败');
+                }
+            } catch (error) {
+                showError('error1', '设置失败，请稍后重试');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+
+        // 显示错误信息
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html> 
